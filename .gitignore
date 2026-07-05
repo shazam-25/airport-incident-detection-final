@@ -1,5 +1,6 @@
 # Kaggle API
 .kaggle
+__pycache__/
 
 # Datasets
 data/raw
