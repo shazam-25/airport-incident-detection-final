@@ -1,2 +1,6 @@
+# Kaggle API
 .kaggle
-data/
+
+# Datasets
+data/raw
+data/processed
