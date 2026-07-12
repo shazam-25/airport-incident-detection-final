@@ -24,7 +24,7 @@ class KaggleDatasetExtractor:
             target_dir = os.path.join(self.download_root, task_name)
             os.makedirs(target_dir, exist_ok=True)
 
-            print(f"📥Downloading {task_name} dataset from Kaggle...")
+            print(f"\n📥Downloading {task_name.upper()} dataset from Kaggle...")
 
             # Download files directly into target raw directory and unzip
             self.api.dataset_download_files(
@@ -104,7 +104,7 @@ class KaggleDatasetExtractor:
             print("Consolidating Nested Structured layouts -> [FOD]")
 
             target_images_dir = fod_root / "images"
-            target_labels_dir = fod_root / "labels"
+            target_labels_dir = fod_root / "xml_labels"
             target_images_dir.mkdir(parents=True, exist_ok=True)
             target_labels_dir.mkdir(parents=True, exist_ok=True)
 
