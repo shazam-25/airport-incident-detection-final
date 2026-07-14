@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 from collections import Counter
 import matplotlib.pyplot as plt
 
-class MultiTaskDatasetAnalyzer:
+class MultiTaskDatasetProfiler:
     def __init__(self, raw_root="data/raw"):
         self.raw_root = raw_root
         self.tasks = ["turnaround", "ppe", "fod"]
