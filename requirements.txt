@@ -3,3 +3,4 @@ pathlib
 pandas
 seaborn
 shutil
+sklearn
