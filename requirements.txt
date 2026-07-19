@@ -1,6 +1,7 @@
-matplotlib.pyplot
+matplotlib
+numpy
+opencv-python
 pathlib
 pandas
 seaborn
-shutil
-sklearn
+scikit-learn

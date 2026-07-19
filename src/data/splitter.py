@@ -7,38 +7,47 @@ from sklearn.model_selection import train_test_split
 
 class MultiTaskDataSplitter:
     def __init__(self, interim_dir="data/interim", processed_dir="data/processed", ratios=(0.70, 0.15, 0.15)):
-        self.interim_dir = interim_dir
-        self.processed_dir = processed_dir
+        self.interim_dir = os.path.abspath(interim_dir)
+        self.processed_dir = os.path.abspath(processed_dir)
         self.ratios = ratios    # (train, val, test)
 
     def _profile_dataset_labels(self, stream):
         """Scans the interim text annotations to calculate the primary/rarest class
         associated with each individual image frame."""
         lbl_dir = os.path.join(self.interim_dir, stream, "labels")
-        lbl_files = sorted(glob.glob(os.path.join(lbl_dir, "*.txt")))
+        img_dir = os.path.join(self.interim_dir, stream, "images")
 
         file_to_primary_class = {}
 
-        for lbl_path in lbl_files:
-            base_name = os.path.splitext(os.path.basename(lbl_path))[0]
-            img_path = os.path.join(self.interim_dir, stream, "images", "f{base_name}.jpg")
+        if not os.path.exists(lbl_dir):
+            print(f"⚠️ Warning: Label directory not found: {lbl_dir}")
+            return file_to_primary_class
 
-            if not os.path.exists(img_path):
+        # Explicitly list text files to bypass environment-specific glob bugs
+        for filename in sorted(os.listdir(lbl_dir)):
+            if not filename.endswith('.txt'):
                 continue
 
+            lbl_path = os.path.join(lbl_dir, filename)
+            base_name = os.path.splitext(filename)[0]
+            img_path = os.path.join(img_dir, f"{base_name}.jpg")
+
+            # Verify pairing integrity
+            if not os.path.exists(img_path):
+                continue
+            
             classes_in_file = []
             with open(lbl_path, 'r') as f:
                 for line in f.readlines():
                     parts = line.strip().split()
-                    if parts: classes_in_file.append(int(parts[0]))
-
-                if classes_in_file:
-                    # Stratification Anchor: Assign this file to its rarest present class
-                    # to guarantee rare class instances are distributed evenly across splits
-                    file_to_primary_class[img_path] = classes_in_file
-                else:
-                    # Background-only images or empty frames assigned to an arbitrary background class marker
-                    file_to_primary_class[img_path] = [-1]
+                    if parts:
+                        classes_in_file.append(int(parts[0]))
+            
+            # Group by class list, or flag as background if empty
+            if classes_in_file:
+                file_to_primary_class[img_path] = classes_in_file
+            else:
+                file_to_primary_class[img_path] = [-1]
         
         return file_to_primary_class
 
@@ -60,6 +69,11 @@ class MultiTaskDataSplitter:
         for stream in streams:
             file_label_map = self._profile_dataset_labels(stream)
             images = list(file_label_map.keys())
+
+            if not images:
+                print(f"❌ No valid paired images found for stream: {stream.upper()}")
+                summary[stream] = {"train": 0, "val": 0, "test": 0}
+                continue
 
             # Count global class distributions for this specific stream
             global_counts = Counter([cls for classes in file_label_map.values() for cls in classes])
