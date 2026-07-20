@@ -1,3 +1,4 @@
+albumentations
 matplotlib
 numpy
 opencv-python
@@ -5,3 +6,4 @@ pathlib
 pandas
 seaborn
 scikit-learn
+torch
