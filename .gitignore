@@ -8,4 +8,5 @@ data/interim
 data/processed
 
 # Model Weights
-weights/
+model/
+

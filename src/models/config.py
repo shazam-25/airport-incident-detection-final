@@ -28,7 +28,7 @@ class MultiTaskModelConfig:
     @property
     def weights_path(self) -> str:
         """Returns the absolute path to the weight file at project root."""
-        weights_folder = PROJECT_ROOT / self.weights_dir
+        weights_folder = PROJECT_ROOT / "model" / self.weights_dir
         
         # Automatically create the weights folder at project root if missing
         weights_folder.mkdir(parents=True, exist_ok=True)

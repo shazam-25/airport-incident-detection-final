@@ -6,4 +6,6 @@ pathlib
 pandas
 seaborn
 scikit-learn
+tensor
 torch
+wandb
