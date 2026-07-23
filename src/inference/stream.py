@@ -22,7 +22,7 @@ class AirportStreamProcessor:
 
     CLASS_NAMES = {
         "turnaround": ['aircraft', 'baggage_truck', 'bridge_connected', 'bus', 'catering_truck', 'fuel_truck', 'fueling', 'ground_power', 'person', 'pushback_tractor', 'ramp_loader', 'rolling_stairway', 'stairway'],
-        "ppe": ["person", "Ear Protector", "Safety Vest"],
+        "ppe": ["ear_protector", "safety_vest"],
         "fod": ["debris_object"]
     }
 

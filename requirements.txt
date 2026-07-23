@@ -5,6 +5,8 @@ opencv-python
 pathlib
 pandas
 pillow
+psycopg2-binary
+redis
 seaborn
 scikit-learn
 tensor
