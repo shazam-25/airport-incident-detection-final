@@ -4,8 +4,10 @@ numpy
 opencv-python
 pathlib
 pandas
+pillow
 seaborn
 scikit-learn
 tensor
 torch
+torchmetrics
 wandb

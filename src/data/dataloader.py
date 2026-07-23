@@ -57,16 +57,16 @@ class TaskDataset(Dataset):
 
 
 def multitask_collate_fn(batch):
-    """Custom collate function that batches multi-task images, labels, and task IDs cleanly.
-    Formated to match Ultralytics v8DetectionLoss expected target dictionary structure."""
+    """
+    Custom collate function that batches multi-task images, labels, and task IDs cleanly.
+    Formated to match Ultralytics v8DetectionLoss expected target dictionary structure.
+    """
     images, targets, task_ids = zip(*batch)
 
     # Stack image tensors [B, 3, H, W]
     images_stacked = torch.stack(images, dim=0)
     task_ids_stacked = torch.tensor(task_ids, dtype=torch.long)
 
-    # Ultralytics v8DetectionLoss expects target bounding boxes as [batch_idx, class_id, x, y, w, h]
-    # Group targets into task-specific dictionary outputs
     task_map = {0: "turnaround", 1: "ppe", 2: "fod"}
     task_targets = {}
 
@@ -77,11 +77,16 @@ def multitask_collate_fn(batch):
 
         for sub_b_idx, real_b_idx in enumerate(batch_indices):
             sample_boxes = targets[real_b_idx]
-            if len(sample_boxes) > 0:
-                # Prepend the batch index within the task slice
-                batch_col = torch.full((len(sample_boxes), 1), sub_b_idx, dtype=torch.float32)
+            
+            # Ensure target tensor is 2D matrix [N, 5]
+            if sample_boxes.ndim == 1 and sample_boxes.numel() > 0:
+                sample_boxes = sample_boxes.unsqueeze(0)
+
+            if sample_boxes.numel() > 0 and sample_boxes.ndim == 2:
+                # Prepend batch index within task batch slice -> [sub_b_idx, cls_id, x, y, w, h]
+                batch_col = torch.full((sample_boxes.shape[0], 1), sub_b_idx, dtype=torch.float32)
                 task_boxes.append(torch.cat([batch_col, sample_boxes], dim=1))
-        
+
         if len(task_boxes) > 0:
             task_targets[task_name] = torch.cat(task_boxes, dim=0)
         else:

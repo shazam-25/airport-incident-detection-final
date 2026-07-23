@@ -64,7 +64,7 @@ class MultiTaskTrainer:
         running_total_loss = 0.0
         loss_tracker = {}
 
-        pbar = tqdm(self.train_loader, desc=f"Epoch {epoch} [Train]", leave=False)
+        pbar = tqdm(self.train_loader, desc=f"Epoch {epoch} [Train]", leave=False, position=0)
         for batch_idx, (images, targets, task_ids) in enumerate(pbar):
             images = images.to(self.device, non_blocking=True)
             task_ids = task_ids.to(self.device, non_blocking=True)
@@ -110,7 +110,7 @@ class MultiTaskTrainer:
         self.loss_fn.eval()
 
         running_val_loss = 0.0
-        pbar = tqdm(self.val_loader, desc=f"Epoch {epoch} [Val]", leave=False)
+        pbar = tqdm(self.val_loader, desc=f"Epoch {epoch} [Val]", leave=False, position=0)
 
         for images, targets, task_ids in pbar:
             images = images.to(self.device, non_blocking=True)
@@ -169,7 +169,7 @@ class MultiTaskTrainer:
                     "loss_state_dict": self.loss_fn.state_dict(),
                     "val_loss": val_loss
                 }, checkpoint_path)
-                print(f" 💾 Saved Best Model Checkpoint (Val LOss: {val_loss:.4f}) -> {checkpoint_path}")
+                print(f" 💾 Saved Best Model Checkpoint (Val Loss: {val_loss:.4f}) -> {checkpoint_path}")
 
             self.tb_writer.close()
             if self.use_wandb:
