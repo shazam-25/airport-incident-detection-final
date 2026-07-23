@@ -129,7 +129,7 @@ class MultiTaskTrainer:
         return avg_val_loss
 
     def fit(self, num_epochs: int):
-        print(f"🚀 Starting Multi-Task Model Training on device [{self.device.upper()}] for {num_epcohs} Epcohs...\n")
+        print(f"🚀 Starting Multi-Task Model Training on device [{self.device.upper()}] for {num_epochs} Epcohs...\n")
 
         for epoch in range(1, num_epochs + 1):
             train_loss, loss_items = self.train_epoch(epoch)
