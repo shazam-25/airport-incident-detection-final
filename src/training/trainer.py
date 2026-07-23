@@ -171,11 +171,11 @@ class MultiTaskTrainer:
                 }, checkpoint_path)
                 print(f" 💾 Saved Best Model Checkpoint (Val Loss: {val_loss:.4f}) -> {checkpoint_path}")
 
-            self.tb_writer.close()
-            if self.use_wandb:
-                wandb.finish()
+        self.tb_writer.close()
+        if self.use_wandb:
+            wandb.finish()
 
-            print("\n✅ Multi-Task Training Pipeline Completed Successfully!")
+        print("\n✅ Multi-Task Training Pipeline Completed Successfully!")
 
 
 

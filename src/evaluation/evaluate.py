@@ -30,11 +30,12 @@ class MultiTaskEvaluator:
         
         # Initialize TorchMetrics mAP engine per task
         map_metric_calculators = {
-            task_name = MeanAveragePrecision(
-                box_format="cxcywh",    # YOLO format outputs center_x, center_y, width, height
+            task_name: MeanAveragePrecision(
+                box_format="cxcywh", # YOLO format outputs center_x, center_y, width, height
                 iou_type="bbox",
-                class_metrics=True,
-            ).to(self.device) for task_name in self.task_names
+                class_metrics=True
+            ).to(self.device)
+            for task_name in self.task_names
         }
 
         task_map = {0: "turnaround", 1: "ppe", 2: "fod"}
