@@ -5,10 +5,12 @@ opencv-python
 pathlib
 pandas
 pillow
+plotly
 psycopg2-binary
 redis
 seaborn
 scikit-learn
+streamlit
 tensor
 torch
 torchmetrics

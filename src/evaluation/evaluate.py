@@ -56,12 +56,12 @@ class MultiTaskEvaluator:
                 # 1. Process Ground Truth Bounding Boxes for sample
                 sample_gt_boxes = targets.get(task_name, torch.zeros((0, 6)))
                 # Filter rows belonging to current batch element within task slice
-                mask = sample_gt_boxes[:, 0] == batch_idx if len(sample_get_boxes) > 0 else []
+                mask = sample_gt_boxes[:, 0] == batch_idx if len(sample_gt_boxes) > 0 else []
                 gt_slice = sample_gt_boxes[mask] if len(mask) > 0 else torch.zeros((0,6))
 
                 gt_dict = [
                     {
-                        "boxes": gt_slice[:, 2:6].to(self.device) if len(gt_slice) > 0 else torch.zeros((0,4), device=self.device)
+                        "boxes": gt_slice[:, 2:6].to(self.device) if len(gt_slice) > 0 else torch.zeros((0,4), device=self.device),
                         "labels": gt_slice[:, 1].long().to(self.device) if len(gt_slice) > 0 else torch.zeros((0,), dtype=torch.long, device=self.device)
                     }
                 ]
@@ -78,7 +78,7 @@ class MultiTaskEvaluator:
                     # Assuming decoded box format [boxes, scores, labels]
                     pred_boxes = raw_preds[batch_idx, :, :4] if raw_preds.ndim == 3 else torch.zeros((0, 4), device=self.device)
                     pred_score = raw_preds[batch_idx, :, 4] if raw_preds.ndim == 3 else torch.zeros((0,), device=self.device)
-                    pred_labels = raw_pred[batch-idx, :, 5].long() if raw_preds.ndim == 3 else torch.zeros((0,), device=self.device, dtype=torch.long)
+                    pred_labels = raw_preds[batch_idx, :, 5].long() if raw_preds.ndim == 3 else torch.zeros((0,), device=self.device, dtype=torch.long)
 
                     # Apply confidence threshold filtering
                     conf_mask = pred_scores >= conf_thresh
@@ -108,7 +108,7 @@ class MultiTaskEvaluator:
                         "mar_100": metrics["mar_100"].item()
                     }
 
-                    rint(f"\n🔹 STREAM HEAD: [{task_name.upper()}]")
+                    print(f"\n🔹 STREAM HEAD: [{task_name.upper()}]")
             print(f"  • mAP @ 0.50     : {results[task_name]['mAP_50']:.4f}")
             print(f"  • mAP @ 0.50:0.95: {results[task_name]['mAP_50_95']:.4f}")
             print(f"  • mAR @ 100      : {results[task_name]['mar_100']:.4f}")

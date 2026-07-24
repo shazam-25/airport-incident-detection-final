@@ -1,7 +1,8 @@
 import os
 from pathlib import Path
 import torch
-from torch.amp import GradScaler, autocast
+from torch.amp.autocast_mode import autocast
+from torch.amp.grad_scaler import GradScaler
 from torch.utils.tensorboard import SummaryWriter
 import wandb
 from tqdm import tqdm

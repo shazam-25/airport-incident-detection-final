@@ -14,7 +14,7 @@ class LocalObjectStorage:
     Saves raw high-resolution violation frames and cropped evidence snapshots
     to local disk/MinIO without bloating relational DB indexes.
     """
-    def __init__(self, base_dir: str = "storage/bobs"):
+    def __init__(self, base_dir: str = "storage/blobs"):
         self.base_dir = PROJECT_ROOT / base_dir
         os.makedirs(self.base_dir, exist_ok=True)
 
