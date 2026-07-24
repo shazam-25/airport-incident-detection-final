@@ -1,5 +1,6 @@
 import json
 import time
+from pathlib import Path
 from typing import Dict, Any, Optional
 
 try:
@@ -8,12 +9,15 @@ try:
 except ImportError:
     REDIS_AVAILABLE = False
 
+# Automatically identify project root directory (two levels up from src/storage/)
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
 class RedisHotCache:
     """
     Hot Path Evaluation Layer.
     Publishes sub-2ms telemetry broadcats and volatile alert states to the frontend.
     """
-    def __init__(self, host: str="localhost", port: int = 6379, channel: str: "aiport_alerts"):
+    def __init__(self, host: str="localhost", port: int = 6379, channel: str = "aiport_alerts"):
         self.channel = channel
         self.client = None
         self.fallback_memory_cache = {}
@@ -58,7 +62,7 @@ class RedisHotCache:
             try:
                 val = self.client.get(f"latest_alert:{stream_source}")
                 if val:
-                    return json.loads(val.decode('utf-8'))
+                    return json.loads(val)
             except Exception:
                 pass
         return self.fallback_memory_cache.get(stream_source)
